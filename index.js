@@ -3,20 +3,22 @@ const React = require('react')
 const Mustache = require('mustache')
 const ReactDOMServer = require('react-dom/server')
 
-const view = {
-  title: 'What Joe spends',
-  calc: function() {
-    return 2 + 4
-  }
-}
+const fs = require('fs')
 
-const ComponentContainingMustache = React.createElement(
+const test_template = fs.readFileSync('templates/tiny.mustache', 'utf-8')
+console.log(test_template)
+const test_view = JSON.parse(fs.readFileSync('data/test_view.json', 'utf-8'))
+console.log(test_view)
+
+const TestComponentContainingMustache = React.createElement(
   'div',
   null,
-  React.createElement('h1', null, Mustache.render('{{title}}', view)),
-  React.createElement('p', null, Mustache.render('Joe spends {{calc}}', view))
+  React.createElement('h1', null, Mustache.render('{{title}}', test_view)),
+  React.createElement('p', null, Mustache.render(test_template, test_view))
 )
 
-const output = ReactDOMServer.renderToStaticMarkup(ComponentContainingMustache)
+const output = ReactDOMServer.renderToStaticMarkup(
+  TestComponentContainingMustache
+)
 
 console.log(output)
