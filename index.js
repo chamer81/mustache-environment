@@ -8,12 +8,25 @@ const http = require('http')
 
 const Parser = require('html-react-parser')
 
+const filenames = fs.readdirSync('snippets')
+
+const snippets = filenames
+  .filter(filename => filename.endsWith('.mustache'))
+  .reduce((obj, filename) => {
+    obj[filename.replace('.mustache', '')] = fs.readFileSync(
+      'snippets/' + filename,
+      'utf-8'
+    )
+    return obj
+  }, {})
+console.log(JSON.stringify(snippets))
+
 const test_template = fs.readFileSync(
   'templates/confirmation-email.mustache',
   'utf-8'
 )
-const test_snippet = fs.readFileSync('templates/snippet-test.mustache', 'utf-8')
 console.log(test_template)
+
 const test_view = JSON.parse(
   fs.readFileSync('data/confirmation-email.json', 'utf-8')
 )
@@ -56,11 +69,7 @@ http
             React.createElement(
               'p',
               null,
-              Parser(
-                Mustache.render(data, test_view, {
-                  testsnippet: test_snippet
-                })
-              )
+              Parser(Mustache.render(data, test_view, snippets))
             )
           )
         )
