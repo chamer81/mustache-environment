@@ -17,7 +17,7 @@ const snippets = filenames
 //console.log(JSON.stringify(snippets))
 
 const template_name =
-  process.argv.length > 2 ? process.argv[2] : 'test.mustache'
+  process.argv.length > 2 ? process.argv[2] : 'confirmation-email.mustache'
 
 const template = fs.readFileSync('templates/' + template_name, 'utf-8')
 //console.log(test_template)
