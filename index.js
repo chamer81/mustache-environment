@@ -19,18 +19,18 @@ const snippets = filenames
     )
     return obj
   }, {})
-console.log(JSON.stringify(snippets))
+//console.log(JSON.stringify(snippets))
 
-const test_template = fs.readFileSync(
-  'templates/confirmation-email.mustache',
-  'utf-8'
-)
-console.log(test_template)
+const template_name =
+  process.argv.length > 2 ? process.argv[2] : 'test.mustache'
+
+const template = fs.readFileSync('templates/' + template_name, 'utf-8')
+//console.log(test_template)
 
 const test_view = JSON.parse(
   fs.readFileSync('data/confirmation-email.json', 'utf-8')
 )
-console.log(test_view)
+//console.log(test_view)
 
 const TestComponentContainingMustache = React.createElement(
   'div',
@@ -47,14 +47,11 @@ const output = ReactDOMServer.renderToStaticMarkup(
   TestComponentContainingMustache
 )
 
-console.log(output)
+//console.log(output)
 
 http
   .createServer(function(req, res) {
-    fs.readFile('templates/confirmation-email.mustache', 'utf-8', function(
-      err,
-      data
-    ) {
+    fs.readFile('templates/' + template_name, 'utf-8', function(err, data) {
       res.writeHead(200, {'Content-Type': 'text/html'})
       res.write(
         ReactDOMServer.renderToStaticMarkup(
@@ -69,7 +66,7 @@ http
             React.createElement(
               'p',
               null,
-              Parser(Mustache.render(data, test_view, snippets))
+              Parser(Mustache.render(template, test_view, snippets))
             )
           )
         )
